@@ -1,0 +1,9 @@
+node_modules
+dist
+doc * .log
+.vscode
+.DS_Store
+doc2
+src/config.js
+.env
+docker-compose.yml

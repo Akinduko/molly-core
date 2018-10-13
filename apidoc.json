@@ -1,0 +1,12 @@
+{
+    "name": "adenison-core",
+    "version": "0.0.1",
+    "description": "Gateway to all backend services",
+    "title": "Adenison api",
+    "url": "",
+    "sampleUrl": "",
+    "template": {
+        "withCompare": true,
+        "withGenerator": true
+    }
+}

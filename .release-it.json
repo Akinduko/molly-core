@@ -1,0 +1,3 @@
+{
+    "afterReleaseCommand": "echo Successfully released ${version} to ${dist.repo}."
+}
