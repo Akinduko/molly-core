@@ -10,6 +10,8 @@
     "watch-funcs": "babel -w src --out-dir dist",
     "serve": "nodemon server.js",
     "build": "npm run clean && npm run build-funcs",
+    "deploy":"yarn clean && yarn build-funcs && yarn deps-copy && yarn docker-build",
+    "docker-build":"docker build .",
     "start": "node ./dist/index.js",
     "postinstall": "npm run -s build",
     "test": "eslint src",

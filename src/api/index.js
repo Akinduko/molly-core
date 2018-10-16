@@ -5,6 +5,7 @@ import admin from './admin/router'
 import locations from './locations/router'
 import partners from './partners/router'
 import dispatch from './dispatch/router'
+import payments from './payments/router'
 
 export default ({
 users,
@@ -13,5 +14,6 @@ admin,
 locations,
 riders,
 partners,
-dispatch
+dispatch,
+payments
 })

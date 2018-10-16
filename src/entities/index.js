@@ -6,6 +6,7 @@ import AccessKeys from './accesskeys'
 import Locations from './locations'
 import Partners from './partners'
 import Dispatch from './dispatch'
+import Payments from './payments'
 
 
 
@@ -17,7 +18,8 @@ export const schemas = [
         require('./accesskeys').schema,
         require('./locations').schema,
         require('./partners').schema,
-        require('./dispatch').schema
+        require('./dispatch').schema,
+        require('./payments').schema
 ]
 export default (orm,maps) => {
         return {
@@ -29,6 +31,7 @@ export default (orm,maps) => {
                 accesskeys: new AccessKeys({orm, name: 'accesskeys'}),
                 partners: new Partners({orm,name:'partners'}),
                 dispatch: new Dispatch({orm,name:'dispatch'}),
+                payments: new Payments({orm,name:'payments'}),
 
         }
 }
