@@ -1,4 +1,4 @@
-// import { genIdToken } from '../../utils/generateidtoken'
+const logger = require('../../utils/logger').logger;
 import { sendMail } from '../../utils/email'
 var ObjectId = require('mongoose').Types.ObjectId; 
 
@@ -8,7 +8,7 @@ const guid = () => {
     }
     return s4()+s4()+s4()+s4()+s4()+s4()
 }
-export default ({ entities: { roles ,riders,partners,accesskeys,auths} }) => ({
+export default ({ entities: { roles ,riders,partners,accesskeys,auths,payments} }) => ({
     createRoles: async (req, res) => {
         let rolemodel;
         try {
@@ -26,6 +26,7 @@ export default ({ entities: { roles ,riders,partners,accesskeys,auths} }) => ({
            
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log({ error })
             res.status(400).json({ error: error })
         }
@@ -57,6 +58,7 @@ export default ({ entities: { roles ,riders,partners,accesskeys,auths} }) => ({
             }
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -75,6 +77,7 @@ export default ({ entities: { roles ,riders,partners,accesskeys,auths} }) => ({
             res.status(200).json(result)
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             res.status(400).json({ error: error.err.message })
             
         }
@@ -88,6 +91,11 @@ export default ({ entities: { roles ,riders,partners,accesskeys,auths} }) => ({
                 rolemodel = roles.setModel()
             }
             const data = req.body
+            delete data['name']
+            delete data['description']
+            delete data['roles']
+            delete data['_id']
+            delete data['id']
             const output = await roles.findOne(rolemodel,[{_id:new ObjectId(req.params.id)}])
             const previous = output.roles
             const key = Object.keys(data);
@@ -101,6 +109,7 @@ export default ({ entities: { roles ,riders,partners,accesskeys,auths} }) => ({
             res.status(200).json(role)
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.err.message })
             
@@ -114,11 +123,17 @@ export default ({ entities: { roles ,riders,partners,accesskeys,auths} }) => ({
             } catch (error) {
                 rolemodel = roles.setModel()
             }
-            const data = req.body.roles
+            const data = req.body
+            delete data['name']
+            delete data['description']
+            delete data['roles']
+            delete data['_id']
+            delete data['id']
             const output = await roles.findOne(rolemodel,[{_id:new ObjectId(req.params.id)}])
             const previous = output.roles
-            for (let i=0;i<data.length;i++){
-                delete previous[data[i]]
+            const key = Object.keys(data);
+            for (let i=0;i<key.length;i++){
+                delete previous[key[i]]
             }
             output[roles]=previous
             output['modified'] = Date.now()
@@ -126,6 +141,7 @@ export default ({ entities: { roles ,riders,partners,accesskeys,auths} }) => ({
             res.status(200).json(role)
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.err.message })
             
@@ -145,8 +161,8 @@ export default ({ entities: { roles ,riders,partners,accesskeys,auths} }) => ({
             res.status(200).json(result)
         }
         catch (error) {
-            res.status(400).json({ error: error.err.message })
-            
+            logger.info({time:new Date(),user:req.user.id,error})
+            res.status(400).json({ error: error.err.message })    
         }
     },
     getPendingPartners:async (req, res) => {
@@ -163,6 +179,7 @@ export default ({ entities: { roles ,riders,partners,accesskeys,auths} }) => ({
             res.status(200).json(result)
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log({error})
             res.status(400).json({ error: error })
             
@@ -194,8 +211,9 @@ export default ({ entities: { roles ,riders,partners,accesskeys,auths} }) => ({
                 const result = await partners.findOne(partnersmodel, [query])
                 result['status']='verified'
                 result['active']=true
+                result['payment']["percentage_charge"]=req.body.perc
+                result['account_created']=true
                 delete result['_id']
-                await partners.update(partnersmodel,req.params.id, result)
                 let rolemodel;
                 try {
                     rolemodel = roles.model()
@@ -211,8 +229,19 @@ export default ({ entities: { roles ,riders,partners,accesskeys,auths} }) => ({
                 data['name']=result.name;
                 data['_id']=req.params.id;
                 data['role']=role._id;
+                let {business_name,settlement_bank,account_number,percentage_charge}=result['payment']
+                const paystack = await payments.paystackRequest(
+                    `/subaccount`, 
+                    'post',
+                    {
+                        business_name,
+                        settlement_bank,
+                        account_number,
+                        percentage_charge
+                    })
                 const outcome = await accesskeys.create(accesssmodel,data)
-                if(outcome.id){
+                if(paystack.status&&outcome.id){
+                    await partners.update(partnersmodel,req.params.id, result)
                     const html = `<body><strong>Welcome to Adenison Logistics</strong>
                     <p>Dear ${outcome.name}, your partner account has been created</p>
                     <p>apiKey:${outcome.apiKey}</p>
@@ -224,6 +253,7 @@ export default ({ entities: { roles ,riders,partners,accesskeys,auths} }) => ({
             }
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log({error})
             res.status(400).json({ error: error })    
         }
@@ -283,6 +313,7 @@ export default ({ entities: { roles ,riders,partners,accesskeys,auths} }) => ({
             }
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log({error})
             res.status(400).json({ error: error })    
         }

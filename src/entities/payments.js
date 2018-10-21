@@ -1,4 +1,6 @@
 import BaseEntity from "./base";
+import axios from 'axios';
+import CONFIG from '../config'
 const Ajv = require('ajv');
 const mongoose = require('mongoose');
 
@@ -37,37 +39,13 @@ export const createSchema = {
     type: 'object',
     name: 'payments',
     properties: {
-        dispatch: {
-            type: "string"
-        },
-        owner: {
-            type: "string"
-        },
-        user: {
-            type: "string"
-        },
-        rider: {
-            type: "string"
-        },
-        email: {
-            type: "string"
-        },
         amount:{
             type: "number"
-        },
-        msisdn:{
-            type: "number"
-        },
+        }
     },
     additionalProperties: false,
     required: [
-        'dispatch',
-        'rider',
-        'user',
-        'owner',
-        'msisdn',
-        'amount',
-        'email'
+        'amount'
     ]
 }
 
@@ -114,7 +92,10 @@ export default class Payments extends BaseEntity {
                 type: Number
             },
             msisdn:{
-                type: Number
+                type: String
+            },
+            data:{
+                type: Object
             },
             created: {
                 type: Number
@@ -127,5 +108,58 @@ export default class Payments extends BaseEntity {
     }
     model = () => {
         return mongoose.model('payments')
+    }
+    paystackRequest=async(params='',method='post',body={})=>{
+        const baseUrl = 'https://api.paystack.co'
+        const config= {headers:{Authorization: `Bearer ${CONFIG.PAYSTACK_SECRET_KEY}`}}
+        switch(method){
+            case 'get':
+            try{
+               const result = await axios.get(`${baseUrl}/${params}`,config);
+               return result.data
+            }
+            catch(error){
+                return error
+            }
+            break;
+            case 'post':
+            try{
+                const result = await axios.post(`${baseUrl}/${params}`,body,config);
+                return result.data
+            }
+            catch(error){
+                return error
+            }
+            break;
+            case 'put':
+            try{
+                const result = await axios.put(`${baseUrl}/${params}`,body,config);
+                return result.data
+            }
+            catch(error){
+                return error
+            }
+            break;
+            case 'delete':
+            try{
+                const result =  await axios.delete(`${baseUrl}/${params}`,config);
+                return result.data
+            }
+            catch(error){
+                return error
+            }
+            break;
+            default:
+            try{
+                const result = await axios.post(`${baseUrl}/${method}`,body);
+                return result.data
+            }
+            catch(error){
+                return error
+            }
+            break;
+    
+        }
+
     }
 }

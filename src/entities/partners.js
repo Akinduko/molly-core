@@ -59,6 +59,27 @@ export const updateschema = {
     },
     additionalProperties: false
 }
+
+const paymentSchema =   { 
+type: 'object',
+name: 'partners',
+properties: {
+    business_name: {
+        type: 'string'
+    },
+    settlement_bank:{
+        type: 'string'
+    },
+    account_number:{
+        type: 'string'
+    },
+    percentage_charge:{
+        type: 'string'
+    }
+},
+additionalProperties: false
+};
+
 export const signupSchema = {
     type: 'object',
     name: 'partners',
@@ -84,14 +105,16 @@ export const signupSchema = {
         },
         country: {
             type: 'string'
-        }
+        },
+        payment:paymentSchema
     },
     required: [
         'name',
         'email',
         'address',
         'phonenumber',
-        'state'
+        'state',
+        'payment'
     ]
 }
 
@@ -129,6 +152,21 @@ export default class Partners extends BaseEntity {
         return true
     }
     model = () => {
+        const PaymentSchema = new mongoose.Schema({
+            business_name: {
+                type: String
+            },
+            settlement_bank:{
+                type: String
+            },
+            account_number:{
+                type: String
+            },
+            percentage_charge:{
+                type: Number
+            }
+        });
+        
         const partnerSchema = new mongoose.Schema({
             name: String,
             address: String,
@@ -140,6 +178,7 @@ export default class Partners extends BaseEntity {
             status:String,
             company:String,
             country:String,
+            payment:PaymentSchema,
             created: {
                 type: Number
             },

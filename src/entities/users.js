@@ -59,6 +59,19 @@ export const updateschema = {
     },
     additionalProperties: false
 }
+
+    /**
+     * @typedef userSignupSchema
+     * @property {string} firstname.required -  User firstname 
+     * @property {string} lastname.required - User lastname 
+     * @property {string} address.required - User address 
+     * @property {string} phonenumber.required - User phonenumber 
+     * @property {string} state.required - User state 
+     * @property {string} email.required - User email 
+     * @property {string} avatar - User avatar 
+     */
+
+
 export const signupSchema = {
     type: 'object',
     name: 'users',
@@ -77,6 +90,9 @@ export const signupSchema = {
             type: 'string'
         },
         state: {
+            type: 'string'
+        },
+        email: {
             type: 'string'
         },
         avatar: {

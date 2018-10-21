@@ -37,6 +37,13 @@ export default (db) => {
                 }
             })
         },
+        /**
+         * A handler for retriving a list of records from a collection using their ids.
+         * @param {string} name common name
+         * @param {db.collection} collection.
+         * @param {req} request.
+         * @param {res} response.
+         */
         findOne: async (collection, data) => {
             return new Promise(async (resolve, reject) => {
                 try {
@@ -48,6 +55,12 @@ export default (db) => {
                 }
             })
         },
+        /**
+         * A handler for retriving a list of records from a collection.
+         * @param {db.collection} collection.
+         * @param {req} request.
+         * @param {res} response.
+         */
         find: async (collection, data) => {
             return new Promise(async (resolve, reject) => {
                 try {

@@ -12,6 +12,7 @@ import maps from './mapsorm'
 import mongoose from 'mongoose'
 import config from './config';
 import express from 'express'
+import path from 'path'
 import { apiAuthMiddleware } from './middleware/authentication'
 import os from 'os'
 import Influx  from 'influx';
@@ -19,17 +20,10 @@ import { apiKey } from './middleware/apikey'
 import crypto from 'crypto'
 const logger = require('./utils/logger').logger;
 import { hmac } from './middleware/hmac';
-
 const cookieParser = require('cookie-parser')();
 var bodyParser = require('body-parser')
 const cors = require('cors')({ origin: true });
 const app = express();
-
-
-
-
-// var paystack = require('paystack')(config.PAYSACK_SECRET_KEY);
-
 const e = entities(
     orm(mongoose),
     maps()
@@ -204,6 +198,7 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     const error500={message: err.message,status: 99 };
+    console.log(err)
     logger.info('Core response: '+JSON.stringify(error500));
     res.setHeader('Content-Type' , 'application/json')
     res.status(500).json({message: 'Internal Server error',status: 99 });

@@ -1,10 +1,10 @@
 {
-    "name": "adenison-core",
-    "version": "0.0.1",
+    "name": "Adenison-core",
+    "version": "1.0.0",
     "description": "Gateway to all backend services",
     "title": "Adenison api",
-    "url": "",
-    "sampleUrl": "",
+    "url": "http://139.162.238.226:8000/api/v1",
+    "sampleUrl": "http://139.162.238.226:8000/api/v1",
     "template": {
         "withCompare": true,
         "withGenerator": true

@@ -1,4 +1,5 @@
 import {genIdToken} from '../../utils/generateidtoken'
+const logger = require('../../utils/logger').logger;
 
 export default ({ entities: { users ,dispatch} }) => ({
     requestDispatch: async (req, res) => {
@@ -26,6 +27,7 @@ export default ({ entities: { users ,dispatch} }) => ({
             
         }
         catch (error) {
+            logger.info(error)
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -48,6 +50,7 @@ export default ({ entities: { users ,dispatch} }) => ({
             
         }
         catch (error) {
+            logger.info(error)
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -63,6 +66,7 @@ export default ({ entities: { users ,dispatch} }) => ({
             const user = await users.findOne(model,[{_id:req.user.id}])
             res.status(200).json(user)
         } catch (error) {
+            logger.info(error)
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -86,6 +90,7 @@ export default ({ entities: { users ,dispatch} }) => ({
             const user = await users.update(model,req.user.id,body)
             res.status(200).json(user)
         } catch (error) {
+            logger.info(error)
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -106,6 +111,7 @@ export default ({ entities: { users ,dispatch} }) => ({
             console.log(user)
             res.status(200).json(user)
         } catch (error) {
+            logger.info(error)
             console.log(error)
             res.status(400).json({ error: error.message })
         }

@@ -3,7 +3,14 @@ dist
 doc * .log
 .vscode
 .DS_Store
-doc2
+doc
+logs
 src/config.js
 .env
 docker-compose.yml
+.dockerignore
+Dockerfile
+proxy.go
+.release-it.json
+public
+bin

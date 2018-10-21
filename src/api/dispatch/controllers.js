@@ -1,8 +1,9 @@
 import { genIdToken } from '../../utils/generateidtoken'
 import { sendMail } from '../../utils/email'
 import moment from 'moment';
+const logger = require('../../utils/logger').logger;
 
-export default ({ entities: { dispatch, users }, logger }) => ({
+export default ({ entities: { dispatch, users } }) => ({
     dispatchById: async (req, res) => {
         let {status}=req.query
         let model
@@ -16,6 +17,7 @@ export default ({ entities: { dispatch, users }, logger }) => ({
             const result = await dispatch.findOne(model, query)
             res.status(200).json(result)
         } catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -33,6 +35,7 @@ export default ({ entities: { dispatch, users }, logger }) => ({
             const result = await dispatch.find(model, query)
             res.status(200).json(result)
         } catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -50,6 +53,7 @@ export default ({ entities: { dispatch, users }, logger }) => ({
             const result = await dispatch.find(model, query)
             res.status(200).json(result)
         } catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -67,6 +71,7 @@ export default ({ entities: { dispatch, users }, logger }) => ({
             const result = await dispatch.find(model, query)
             res.status(200).json(result)
         } catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }

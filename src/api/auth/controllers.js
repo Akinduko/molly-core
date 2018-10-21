@@ -1,5 +1,6 @@
 import { genIdToken } from '../../utils/generateidtoken'
 import { sendMail } from '../../utils/email'
+const logger = require('../../utils/logger').logger;
 
 const guid = () => {
     const s4 = () => {
@@ -7,7 +8,7 @@ const guid = () => {
     }
     return s4()+s4()+s4()
 }
-export default ({ entities: { auths, users,roles }, logger }) => ({
+export default ({ entities: { auths, users,roles } }) => ({
     create: async (req, res) => {
         try {
             let authmodel;
@@ -30,17 +31,20 @@ export default ({ entities: { auths, users,roles }, logger }) => ({
                 const emails = auth.code&& auth.code === 11000 ? null : auth._id && auth.email ? 
                 await sendMail("no-reply@adenison.com.ng", email, "Activate Your Account", html) : null;
                 console.log(emails)
+                logger.info({time:new Date(),error:emails})
                 emails===true?null:await auths.delete(authmodel, { email });
                 auth.code && auth.code === 11000  ? res.status(400).json({ error: 'Email is already registered' }) : 
                 emails===true? res.status(200).json({ success:true, id:auth._id }):
                 res.status(400).json({ success:false,error: 'Account creation failed' });
             }
             catch (error) {
+                logger.info({time:new Date(),error})
                 console.log(error)
                 error.err.code === 11000 ? res.status(400).json({ error: 'Email is already registered' }):res.status(400).json({ error: "Invalid Auth Body Parameters" })
             }
         }
         catch (error) {
+            logger.info({time:new Date(),error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -74,10 +78,12 @@ export default ({ entities: { auths, users,roles }, logger }) => ({
                 }
             }
             catch (error) {
+                logger.info({time:new Date(),error})
                 res.status(400).json({ error: "Invalid Auth Body Parameters" })
             }
         }
         catch (error) {
+            logger.info({time:new Date(),error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -103,13 +109,16 @@ export default ({ entities: { auths, users,roles }, logger }) => ({
                 const html = `<body><strong>Reset Your Password</strong>
                 <p>Passcode:${passcode}</p><p href="adenison.com">Click here to activate<p></body>`
                 const emails = auth.nModified===1&& authd._id && authd.email ? await sendMail("no-reply@adenison.com.ng", email, "Reset Your Password", html) : null
+                logger.info({time:new Date(),error:emails})
                 auth.nModified===1? res.status(200).json({ success: true, id: authd['_id'] }):res.status(400).json({success:false,error:'Password reset failed'})
             }
             catch (error) {
+                logger.info({time:new Date(),error})
                 res.status(400).json({ error: "Invalid Auth Body Parameters" })
             }
         }
         catch (error) {
+            logger.info({time:new Date(),error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -129,53 +138,59 @@ export default ({ entities: { auths, users,roles }, logger }) => ({
         const authbody = req.body.auth
         const userbody = req.body.user
         try {
-            let { passcode,email,password } = req.body.auth
-            const authd = await auths.findOne(authmodel, [{ email}]);
-            if(authd && passcode===authd.passcode && authd.active!==true){
-                const validateuser = await users.validateSignup(userbody)
-                const validateauth = await auths.validateSignup(authbody)
-                validateuser ? null : res.status(400).json({ error: "Invalid User Body Parameters" })
-                validateauth ? null : res.status(400).json({ error: "Invalid Auth Body Parameters" })
-                authbody['modified'] = Date.now()
-                authbody['passcode'] = guid();
-                authbody['active'] = true;
-                userbody['created'] = Date.now()
-                let {modified,passcode,active} =authbody
-                const auth = validateuser && validateauth ?
-                 await auths.update(authmodel,authd._id, {password,modified,passcode,active}) : {};
-                 let rolemodel;
-                 try {
-                     rolemodel = roles.model()
-                 } catch (error) {
-                     rolemodel = roles.setModel()
-                 }
-                 let query={}
-                 query[`name`] = 'users'
-                const role = await roles.findOne(rolemodel, [query])
-                const idtoken = validateuser && validateauth && auth.nModified===1 ? await genIdToken(authd._id) : {}
-                userbody['_id'] = authd._id;
-                userbody['email'] = authd.email;
-                userbody['role'] = role;
-                userbody['active'] = true;
-                userbody['business'] = userbody['business']?userbody['business']:false;
-                const user = validateuser && validateauth && auth.nModified===1 ? 
-                await users.create(usersmodel, userbody) : {};
-                const html = '<strong>Welcome</strong>'
-                auth.code === 11000 ? null : validateuser && validateauth && auth.nModified===1 && user.email ?
-                 await sendMail("no-reply@adenison.com.ng", userbody.email, "Activate Your Account", html) : null;
-                auth.code === 11000 ? res.status(400).json({ error: 'Email is already registered' }) :
-                 res.status(200).json({ user, idtoken });
-            }
-            else {
-                if(authd.active===true){
-                    res.status(400).json({ error: "Account already Exists" })
-                }
-                else{
-                    res.status(400).json({ error: "Invalid Auth Parameters" })
-                }  
-            }
+            res.status(200).json(req.body)
+            console.log(req.body)
+
+        //     let { passcode,email,password } = req.body.auth
+        //     const authd = await auths.findOne(authmodel, [{ email}]);
+        //     if(authd && passcode===authd.passcode && authd.active!==true){
+        //         const validateuser = await users.validateSignup(userbody)
+        //         const validateauth = await auths.validateSignup(authbody)
+        //         validateuser ? null : res.status(400).json({ error: "Invalid User Body Parameters" })
+        //         validateauth ? null : res.status(400).json({ error: "Invalid Auth Body Parameters" })
+        //         authbody['modified'] = Date.now()
+        //         authbody['passcode'] = guid();
+        //         authbody['active'] = true;
+        //         userbody['created'] = Date.now()
+        //         let {modified,passcode,active} =authbody
+        //         const auth = validateuser && validateauth ?
+        //          await auths.update(authmodel,authd._id, {password,modified,passcode,active}) : {};
+        //          let rolemodel;
+        //          try {
+        //              rolemodel = roles.model()
+        //          } catch (error) {
+        //              rolemodel = roles.setModel()
+        //          }
+        //          let query={}
+        //          query[`name`] = 'users'
+        //         const role = await roles.findOne(rolemodel, [query])
+        //         const idtoken = validateuser && validateauth && auth.nModified===1 ? await genIdToken(authd._id) : {}
+        //         userbody['_id'] = authd._id;
+        //         userbody['email'] = authd.email;
+        //         userbody['role'] = role;
+        //         userbody['active'] = true;
+        //         userbody['business'] = userbody['business']?userbody['business']:false;
+        //         const user = validateuser && validateauth && auth.nModified===1 ? 
+        //         await users.create(usersmodel, userbody) : {};
+        //         const html = '<strong>Welcome</strong>'
+        //         auth.code === 11000 ? null : validateuser && validateauth && auth.nModified===1 && user.email ?
+        //          await sendMail("no-reply@adenison.com.ng", userbody.email, "Activate Your Account", html) : null;
+        //         auth.code === 11000 ? res.status(400).json({ error: 'Email is already registered' }) :
+        //          res.status(200).json({ user, idtoken });
+        //     }
+        //     else {
+        //         if(authd.active===true){
+        //             logger.info({time:new Date(),error: "Account already Exists" })
+        //             res.status(400).json({ error: "Account already Exists" })
+        //         }
+        //         else{
+        //             logger.info({time:new Date(),error: "Invalid Auth Parameters"})
+        //             res.status(400).json({ error: "Invalid Auth Parameters" })
+        //         }  
+        //     }
         }
         catch (error) {
+            logger.info({time:new Date(),error})
             console.log({ error })
             error.err.code === 11000 ? res.status(400).json({ error: 'Email is already registered' }) : res.status(400).json({ error: error })
         }
@@ -194,6 +209,7 @@ export default ({ entities: { auths, users,roles }, logger }) => ({
                 await auths.validateLogin(body)
             }
             catch (error) {
+                logger.info({time:new Date(),error})
                 res.status(400).json({ error: "Invalid Auth Body Parameters" })
             }
             const auth = await auths.login(authmodel, body)
@@ -201,6 +217,7 @@ export default ({ entities: { auths, users,roles }, logger }) => ({
             auth != null ? res.status(200).json({ success: idtoken }) : res.status(403).json({ failed: "Unauthorized" })
         }
         catch (error) {
+            logger.info({time:new Date(),error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -219,6 +236,7 @@ export default ({ entities: { auths, users,roles }, logger }) => ({
                 await auths.validateLogin(body)
             }
             catch (error) {
+                logger.info({time:new Date(),error})
                 res.status(400).json({ error: "Invalid Auth Body Parameters" })
             }
             const auth = await auths.login(authmodel, body)
@@ -226,6 +244,7 @@ export default ({ entities: { auths, users,roles }, logger }) => ({
             auth != null ? res.status(200).json({ success: idtoken }) : res.status(403).json({ failed: "Unauthorized" })
         }
         catch (error) {
+            logger.info({time:new Date(),error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }

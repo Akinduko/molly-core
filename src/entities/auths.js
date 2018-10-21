@@ -2,6 +2,7 @@ import BaseEntity from "./base";
 const Ajv = require('ajv');
 const mongoose = require('mongoose');
 
+
 export const schema = {
     type: 'object',
     name: 'auths',
@@ -32,6 +33,13 @@ export const schema = {
     },
     additionalProperties: false,
 }
+
+    /**
+     * @typedef AuthUpdate
+     * @property {string} email.required -  User Email 
+     * @property {string} password.required - User Password 
+     */
+
 export const updateschema = {
     type: 'object',
     name: 'auths',
@@ -52,6 +60,20 @@ export const updateschema = {
         'password'
     ]
 }
+    /**
+     * @typedef authsignupSchema
+     * @property {string} email.required -  User Email 
+     * @property {string} password.required - User Password 
+     * @property {string} passcode.required - User passcode 
+     */
+
+    /**
+     * @typedef signupSchema
+     * @property {object} auth - Auth schema 
+     * @property {object} user - User schema 
+     * 
+     */
+
 export const signupSchema = {
     type: 'object',
     name: 'auths',
@@ -76,6 +98,11 @@ export const signupSchema = {
         'passcode'
     ]
 }
+    /**
+     * @typedef loginSchema
+     * @property {string} email.required -  User Email 
+     * @property {string} password.required - User Password 
+     */
 
 export const loginSchema = {
     type: 'object',
@@ -173,3 +200,13 @@ export default class Auths extends BaseEntity {
         return mongoose.model('auths')
     }
 }
+
+/**
+ * @typedef Error
+ * @property {string} code.required
+ */
+
+// /**
+//  * @typedef Response
+//  * @property {[integer]} code
+//  */

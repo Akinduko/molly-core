@@ -1,8 +1,9 @@
 import { genIdToken } from '../../utils/generateidtoken'
 import { sendMail } from '../../utils/email'
 import moment from 'moment';
+const logger = require('../../utils/logger').logger;
 
-export default ({ entities: { locations, users }, logger }) => ({
+export default ({ entities: { locations, users } }) => ({
     broadcast: async (req, res) => {
         try {
             let locationmodel;
@@ -15,6 +16,7 @@ export default ({ entities: { locations, users }, logger }) => ({
             const body = req.body
             const valid = await locations.validateBroadcast(body)
             body['created']= Date.now()
+            body['owner']=req.user.id
             let {lat,lng}=req.body.geometry
             const geometry = {"type":"point","coordinates":[parseFloat(lng),parseFloat(lat)]}
             body['geometry']= geometry
@@ -23,6 +25,7 @@ export default ({ entities: { locations, users }, logger }) => ({
             res.status(200).json({ location })
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -45,6 +48,7 @@ export default ({ entities: { locations, users }, logger }) => ({
             res.status(200).json(location)
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -58,6 +62,7 @@ export default ({ entities: { locations, users }, logger }) => ({
             valid? res.status(200).json(location): res.status(400).json({ error: "Invalid Loation Parameters" })
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -78,6 +83,7 @@ export default ({ entities: { locations, users }, logger }) => ({
             valid? res.status(200).json(result): res.status(400).json({ error: "Invalid Loation Parameters" })
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }

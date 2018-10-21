@@ -1,6 +1,7 @@
 import { genIdToken } from '../../utils/generateidtoken'
 import moment from 'moment';
-
+const logger = require('../../utils/logger').logger;
+var ObjectId = require('mongoose').Types.ObjectId; 
 export default ({ entities: { riders, auths ,dispatch} }) => ({
     getCurrentUser: async (req, res) => {
         let model
@@ -13,6 +14,7 @@ export default ({ entities: { riders, auths ,dispatch} }) => ({
             const rider = await riders.findOne(model, [{ _id: req.user.id }])
             res.status(200).json(rider)
         } catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -34,6 +36,7 @@ export default ({ entities: { riders, auths ,dispatch} }) => ({
             res.status(200).json(dispatches)
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -56,6 +59,7 @@ export default ({ entities: { riders, auths ,dispatch} }) => ({
             
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -63,15 +67,23 @@ export default ({ entities: { riders, auths ,dispatch} }) => ({
     acceptDispatch: async (req, res) => {
         try {
             let dispatchmodel;
+            let ridersmodel;
             try {
                 dispatchmodel = dispatch.model()
             } catch (error) {
                 dispatchmodel = dispatch.setModel()
-            }           
+            } 
+            try {
+                ridersmodel = riders.model()
+            } catch (error) {
+                ridersmodel = riders.setModel()
+            }          
             const current = await dispatch.findOne(dispatchmodel,[{ _id: req.params.id }])
-            console.log(current)
+            
             if(current.status==='requested'){
                 const body =new Object;
+                const riderresult = await riders.findOne(ridersmodel, [{ _id: req.user.id}])  
+                body['owner']=riderresult&&riderresult.owner?riderresult.owner:'admin';
                 body['status']='accepted';
                 body['rider']=req.user.id;
                 const result = await dispatch.update(dispatchmodel,req.params.id, body);
@@ -79,13 +91,14 @@ export default ({ entities: { riders, auths ,dispatch} }) => ({
                 
             }
             else{
-
+                logger.info({time:new Date(),user:req.user.id,error:"Event is no longer available" })
                 res.status(400).json({ error: "Event is no longer available" })
                 
             }
 
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -108,13 +121,14 @@ export default ({ entities: { riders, auths ,dispatch} }) => ({
                 
             }
             else{
-
+                logger.info({time:new Date(),user:req.user.id,error: "Event is no longer available" })
                 res.status(400).json({ error: "Event is no longer available" })
                 
             }
 
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -137,13 +151,14 @@ export default ({ entities: { riders, auths ,dispatch} }) => ({
                 
             }
             else{
-
+                logger.info({time:new Date(),user:req.user.id,error: "Event is no longer available" })
                 res.status(400).json({ error: "Event is no longer available" })
                 
             }
 
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -160,6 +175,7 @@ export default ({ entities: { riders, auths ,dispatch} }) => ({
             await riders.validateUpdate(body)
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             res.status(400).json({ error: "Invalid Users Body Parameters" })
         }
         try {
@@ -167,6 +183,7 @@ export default ({ entities: { riders, auths ,dispatch} }) => ({
             const rider = await riders.update(model, req.user.id, body)
             res.status(200).json(rider)
         } catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -184,9 +201,9 @@ export default ({ entities: { riders, auths ,dispatch} }) => ({
             const data = {}
             data['role'] = body['role']
             const user = await users.update(model, id, data)
-            console.log(user)
             res.status(200).json(user)
         } catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -218,6 +235,7 @@ export default ({ entities: { riders, auths ,dispatch} }) => ({
             validateriders ? res.status(200).json(rider) : res.status(400).json({ error: "Invalid riders Body Parameters" })
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log({ error })
             error.err&&error.err.code===11000?res.status(400).json({ success:false,error: 'Rider details already exist' }):res.status(400).json({ success:false,error: {} })
         }

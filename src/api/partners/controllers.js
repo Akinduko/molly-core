@@ -1,4 +1,5 @@
 import { genIdToken } from '../../utils/generateidtoken'
+const logger = require('../../utils/logger').logger;
 
 export default ({ entities: { riders, auths, partners, payment } }) => ({
 
@@ -10,9 +11,10 @@ export default ({ entities: { riders, auths, partners, payment } }) => ({
             model = partners.setModel()
         }
         try {
-            const partner = await partners.findOne(model, [{ _id: req.user.id }])
+            const partner = await partners.findOne(model, [{ _id: req.params.id }])
             res.status(200).json(partner)
         } catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
@@ -29,6 +31,7 @@ export default ({ entities: { riders, auths, partners, payment } }) => ({
             await partners.validateUpdate(body)
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             res.status(400).json({ error: "Invalid Users Body Parameters" })
         }
         try {
@@ -36,30 +39,11 @@ export default ({ entities: { riders, auths, partners, payment } }) => ({
             const partner = await partners.update(model, req.user.id, body)
             res.status(200).json(partner)
         } catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log(error)
             res.status(400).json({ error: error.message })
         }
     },
-    // updateRole: async (req, res) => {
-    //     const body = req.body
-    //     const id = req.params.id
-    //     let model
-    //     try {
-    //         model = users.model()
-    //     } catch (error) {
-    //         model = users.setModel()
-    //     }
-    //     try {
-    //         const data = {}
-    //         data['role'] = body['role']
-    //         const user = await users.update(model, id, data)
-    //         console.log(user)
-    //         res.status(200).json(user)
-    //     } catch (error) {
-    //         console.log(error)
-    //         res.status(400).json({ error: error.message })
-    //     }
-    // },
     request: async (req, res) => {
         let model;
         try {
@@ -74,13 +58,14 @@ export default ({ entities: { riders, auths, partners, payment } }) => ({
             partnersbody['created'] = Date.now();
             partnersbody['status'] = 'pending';
             partnersbody['active'] = false
-            let { created, active, email, status, name, company, phonenumber, state, country } = partnersbody
+            let { created, active, email, status, name, company, phonenumber, state, country,payment } = partnersbody
             const partner = validatepartners ?
-                await partners.create(model, { created, active, email, status, name, company, phonenumber, state, country }) : {};
+                await partners.create(model, { created, active, email, status, name, company, phonenumber, state, country,payment }) : {};
             validatepartners ? res.status(200).json(partner) :
                 res.status(400).json({ error: "Invalid partners Body Parameters" });
         }
         catch (error) {
+            logger.info({time:new Date(),user:req.user.id,error})
             console.log({ error })
             error.err && error.err.code === 11000 ?
                 res.status(400).json({ success: false, error: 'Partner details already exist' }) :
