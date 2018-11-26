@@ -191,6 +191,7 @@ export default class Auths extends BaseEntity {
             pending_validation: Boolean,
             active: Boolean,
             created: Number,
+            role:String,
             category:String,
             modified: Number,
         });

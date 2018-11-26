@@ -6,69 +6,79 @@
     "auditLog": "logs/.8badf68df82203e3f0074b0e10a1a922acbd9f47-audit.json",
     "files": [
         {
-            "date": 1540108872186,
-            "name": "logs/Adenison-2018-10-21-09.log",
-            "hash": "57426914b7d77c3aa0835427910ab2ea"
+            "date": 1542056897589,
+            "name": "logs/Adenison-2018-11-12-22.log",
+            "hash": "52a4fc397844df7288cc8cb3cda1f238"
         },
         {
-            "date": 1540112417711,
-            "name": "logs/Adenison-2018-10-21-10.log",
-            "hash": "14e72e990a434239b449849e07457f60"
+            "date": 1542068870447,
+            "name": "logs/Adenison-2018-11-13-01.log",
+            "hash": "72b7ada1277e828c719bbd1e5c59895a"
         },
         {
-            "date": 1540116038244,
-            "name": "logs/Adenison-2018-10-21-11.log",
-            "hash": "36d54ca8d4411a4e03d3e58dc7f161d4"
+            "date": 1542090354718,
+            "name": "logs/Adenison-2018-11-13-07.log",
+            "hash": "3692b24a074ea1b4cacff2919de80ca2"
         },
         {
-            "date": 1540121129079,
-            "name": "logs/Adenison-2018-10-21-12.log",
-            "hash": "88effb39895fb46c253d6db4b5ec752e"
+            "date": 1542094929959,
+            "name": "logs/Adenison-2018-11-13-08.log",
+            "hash": "3824b0edaee682e2b19bc26f10de6a91"
         },
         {
-            "date": 1540123301302,
-            "name": "logs/Adenison-2018-10-21-13.log",
-            "hash": "29d49dd1319799b0a2625f5c3f1507d0"
+            "date": 1542262181310,
+            "name": "logs/Adenison-2018-11-15-07.log",
+            "hash": "b85fd5f0081f9b561742a2a5b9c6f0e8"
         },
         {
-            "date": 1540126806326,
-            "name": "logs/Adenison-2018-10-21-14.log",
-            "hash": "41ac63118c4d01e9e146247729e231f6"
+            "date": 1542269876486,
+            "name": "logs/Adenison-2018-11-15-09.log",
+            "hash": "982753816d9e1dd93e3dda8c661842f3"
         },
         {
-            "date": 1540130675651,
-            "name": "logs/Adenison-2018-10-21-15.log",
-            "hash": "45f21fc2af49acd0fba2c2b3c5420548"
+            "date": 1542272451368,
+            "name": "logs/Adenison-2018-11-15-10.log",
+            "hash": "0d89e26f9f522be701368b0a661f92db"
         },
         {
-            "date": 1540134028939,
-            "name": "logs/Adenison-2018-10-21-16.log",
-            "hash": "1c3d058a0b372d1132fb14f18fe8360c"
+            "date": 1542285805257,
+            "name": "logs/Adenison-2018-11-15-13.log",
+            "hash": "89ce7991e439528699ceacdbdcf5a3ee"
         },
         {
-            "date": 1540137624236,
-            "name": "logs/Adenison-2018-10-21-17.log",
-            "hash": "862ceaf37bf5856c7485a1357b997b59"
+            "date": 1542289451085,
+            "name": "logs/Adenison-2018-11-15-14.log",
+            "hash": "f998be6a970dabd57583110e70980edd"
         },
         {
-            "date": 1540141440229,
-            "name": "logs/Adenison-2018-10-21-18.log",
-            "hash": "79a8c4a7fcefc77f7c788a650a31d656"
+            "date": 1542373049760,
+            "name": "logs/Adenison-2018-11-16-13.log",
+            "hash": "5f293a140850177bd59a55b542c65e52"
         },
         {
-            "date": 1540144993554,
-            "name": "logs/Adenison-2018-10-21-19.log",
-            "hash": "4f841bd2deb4539cc05ced9bbf606b84"
+            "date": 1542373297622,
+            "name": "logs/Adenison-2018-11-16-14.log",
+            "hash": "3723a6344eaba4bf7ef9e9568f786cdd"
         },
         {
-            "date": 1540148496810,
-            "name": "logs/Adenison-2018-10-21-20.log",
-            "hash": "200f4dc29020ef2921050cf1d280932e"
+            "date": 1542377174411,
+            "name": "logs/Adenison-2018-11-16-15.log",
+            "hash": "ec179dd26d221cd0a1180d2abb25bc37"
         },
         {
-            "date": 1540152010572,
-            "name": "logs/Adenison-2018-10-21-21.log",
-            "hash": "08cbd39c0aa36ff6d222770282dfc4e5"
+            "date": 1543051928663,
+            "name": "logs/Adenison-2018-11-24-10.log",
+            "hash": "d7786c12b2a99a14e4fa61605bf849ae"
+        },
+        {
+            "date": 1543053657117,
+            "name": "logs/Adenison-2018-11-24-11.log",
+            "hash": "504637c4204889e21dc846eaf192bf8a"
+        },
+        {
+            "date": 1543058512715,
+            "name": "logs/Adenison-2018-11-24-12.log",
+            "hash": "df2fa500ed405b22243a0d1fa031fb02"
         }
     ]
 }

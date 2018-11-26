@@ -2,6 +2,25 @@ import {genIdToken} from '../../utils/generateidtoken'
 const logger = require('../../utils/logger').logger;
 
 export default ({ entities: { users ,dispatch} }) => ({
+    verifyEmail: async (req, res) => {
+        let model
+        try {
+            model = users.model()
+        } catch (error) {
+             model = users.setModel()
+        }
+        try {
+            const {email}=req.query
+            const user = await users.findOne(model,[{email:email}])
+             const {firstname,lastname}=user ? user:{}
+             const result = user? {success:true,firstname,lastname}:{success:false,error:'email is not registered'}
+            res.status(200).json(result)
+        } catch (error) {
+            logger.info(error)
+            console.log(error)
+            res.status(400).json({ error: error.message })
+        }
+    },
     requestDispatch: async (req, res) => {
         try {
             let dispatchmodel;

@@ -5,6 +5,7 @@ const express = require('express');
 export default ({ entities, authMiddleware }) => {
     const router = express.Router();
     const ctrl = controllers({ entities })
+    router.get('/verifyuser', ctrl.verifyEmail)
     router.use(authMiddleware)
     /**
      * @api {get} /users/me getCurrentUser
@@ -64,7 +65,11 @@ export default ({ entities, authMiddleware }) => {
                 "origingeo":{"originlat":6.42610, "originlng":3.4621},
                 "destinationgeo":{"destinationlat":6.42610, "destinationlng":3.4621},
                 "origin":"No 6 Kilimanjaro Street, New york",
-                "destination":"9 bedfordshire street, Lagos"
+                "destination":"9 bedfordshire street, Lagos",
+                "receiver":{
+                    name:'xyz',
+                    msisdn:"08032823104"
+                }
             }
       * @apiSuccess (Success 200) {Object}  Success
       *

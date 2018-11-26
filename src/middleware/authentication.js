@@ -100,7 +100,7 @@ export const apiAuthMiddleware = ({ models: { roles, users ,riders,admin} }) => 
                 // a user can have a role set to it
             
                 role_id =  req.user?   req.user._doc.role:null
-                console.log(role_id)
+                // console.log(role_id)
                 
                 try {
                     let rolemodel;
@@ -110,6 +110,7 @@ export const apiAuthMiddleware = ({ models: { roles, users ,riders,admin} }) => 
                         rolemodel = roles.setModel()
                     }
                     role = await roles.findOne(rolemodel,[{_id:new ObjectId(role_id)}])  
+                    // console.log(role)
                 } catch (error) {
                     // if we can't get the role, then use the default free role
                     const _roles = await roles.findOne(rolemodel,[{name:"users"}])
@@ -119,6 +120,8 @@ export const apiAuthMiddleware = ({ models: { roles, users ,riders,admin} }) => 
                 }
 
                 try {
+                    console.log(role.name)
+                    console.log(role.roles)
                     const acl = new AccessControl({ [role.name]: role.roles })
                     req.role = role
                     req.acl = acl

@@ -9,3 +9,19 @@ export const genIdToken =(data)=>{
             expiresIn: expiration_time
         });
 }
+
+export const genRefreshToken =(data)=>{
+    return jwt.sign(data, 
+        CONFIG.jwt_refreshTokenSecret,{});
+}
+
+export const validateToken= (idToken)=>{
+    return   jwt.verify(idToken, CONFIG.jwt_refreshTokenSecret, async (err, decodedIdToken) => {
+        if (err) {
+            console.error('Error while verifying  ID token:', err);
+            return {success:false}
+        } else {
+            return {success:true,id:decodedIdToken}
+        }
+    })
+}

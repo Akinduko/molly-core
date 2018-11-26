@@ -80,6 +80,10 @@ export const signupSchema = {
             type: 'string',
             minLength: 5
         },
+        password: {
+            type: 'string',
+            minLength: 5
+        },
         lastname: {
             type: 'string'
         },
@@ -102,9 +106,7 @@ export const signupSchema = {
     required: [
         'firstname',
         'lastname',
-        'address',
-        'phonenumber',
-        'state'
+        'password'
     ]
 }
 

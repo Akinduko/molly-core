@@ -6,6 +6,7 @@ export default ({ entities, authMiddleware }) => {
     const router = express.Router();
     const ctrl = controllers({ entities })
 
+    router.get('/refresh', ctrl.refresh)
     /**
       * @api {post} /auth/login Login
       * @apiDescription Login to generate Authentication token.
@@ -26,6 +27,7 @@ export default ({ entities, authMiddleware }) => {
       *
       * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
       */
+     
     router.post('/login', ctrl.login)
     /**
       * @api {post} /auth/create Create
@@ -74,28 +76,28 @@ export default ({ entities, authMiddleware }) => {
       * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
       */
     router.post('/signup', ctrl.signup)
-    /**
-      * @api {post} /auth/signup Signup
-      * @apiDescription Signup to create a validate user.
-      * @apiVersion 1.0.0
-      * @apiName Signup
-      * @apiGroup Auth
-      * @apiHeader {string} X-API-KEY API access-key.
-      * @apiHeader {string} Content-Type API Content-Type.
-      * @apiParam  {string}   email  
-       * @apiParam  {string}   password 
-       * @apiParam  {string}   passcode 
-       * @apiParamExample {json} Request-Example:
-       *      {
-       *             "email":"example@email.com",
-       *             "password": "password",
-       *             "passcode": "passcode"
-       *     }
-      * @apiSuccess (Success 200) {Object}  Result
-      *
-      * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
-      */
-    router.post('/create', ctrl.create)
+    // /**
+    //   * @api {post} /auth/signup Signup
+    //   * @apiDescription Signup to create a validate user.
+    //   * @apiVersion 1.0.0
+    //   * @apiName Signup
+    //   * @apiGroup Auth
+    //   * @apiHeader {string} X-API-KEY API access-key.
+    //   * @apiHeader {string} Content-Type API Content-Type.
+    //   * @apiParam  {string}   email  
+    //    * @apiParam  {string}   password 
+    //    * @apiParam  {string}   passcode 
+    //    * @apiParamExample {json} Request-Example:
+    //    *      {
+    //    *             "email":"example@email.com",
+    //    *             "password": "password",
+    //    *             "passcode": "passcode"
+    //    *     }
+    //   * @apiSuccess (Success 200) {Object}  Result
+    //   *
+    //   * @apiError (Bad Request 400)  ValidationError  Some parameters may contain invalid values
+    //   */
+    // router.post('/create', ctrl.create)
     /**
       * @api {post} /auth/validate Validate
       * @apiDescription Validate to validate a created user.

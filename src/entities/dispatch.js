@@ -67,6 +67,9 @@ export const requestSchema = {
         destination: {
             type: 'string',
         },
+        receiver:{
+            type: "object",  
+        },
         origingeo: {
             type: "object",
             name: "origingeo",
@@ -280,6 +283,9 @@ export default class Dispatch extends BaseEntity {
             },
             modified: {
                 type: Number
+            },
+            receiver: {
+                type: Object,
             }
         });
         return mongoose.model('dispatches', dispatchSchema)
